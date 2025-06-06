@@ -1,0 +1,12 @@
+@import "tailwindcss";
+.search-body{
+    position : absolute;
+    /* width : 100%; */
+    /* position: fixed;  固定定位 */
+    top: 5px;           /* 距离顶部0像素 */
+    left: 5px;          /* 距离左侧0像素 */
+    right: 5px;          /* 距离左侧0像素 */
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.726);
+    border-radius: 10px;
+}
