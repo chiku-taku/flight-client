@@ -1,0 +1,114 @@
+.flight-booking-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  text-align: center;
+  color: #2d3436;
+  margin-bottom: 2rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.location-section {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
+.input-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.input-group label {
+  font-weight: 500;
+  color: #636e72;
+}
+
+.input-group input {
+  padding: 0.8rem;
+  border: 1px solid #b2bec3;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.swap-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  margin-bottom: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.swap-button:hover .swap-icon {
+  color: #0984e3;
+}
+
+.swap-icon {
+  font-size: 1.5rem;
+  color: #636e72;
+  transition: color 0.3s ease;
+}
+
+.date-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.date-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.react-datepicker-wrapper {
+  width: 100%;
+}
+
+.react-datepicker__input-container input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #b2bec3;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.search-button {
+  background: #0984e3;
+  color: white;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.search-button:hover {
+  background: #0873c4;
+}
+
+@media (max-width: 600px) {
+  .location-section {
+    flex-direction: column;
+  }
+  
+  .swap-button {
+    transform: rotate(90deg);
+    margin: -0.5rem 0;
+  }
+}
