@@ -455,7 +455,7 @@ const DrawerBottom: React.FC<Props> = ({
                   onClick={handleSubmit}
                   disabled={!isValid}
                 >
-                  {t('drawer.totalPrice')}
+                  {t('drawer.button1')}
                 </Button>
               </Typography>
               <Typography variant="body2" fontWeight="bold">
@@ -464,7 +464,7 @@ const DrawerBottom: React.FC<Props> = ({
                   sx={{ mt: 3, width: '100%', maxWidth: 300 }}
                   onClick={() => handleCancle(true)}
                 >
-                  {t('drawer.cancle')}
+                  {t('drawer.button2')}
                 </Button>
               </Typography>
 
