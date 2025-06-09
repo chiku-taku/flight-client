@@ -108,7 +108,8 @@
     "registering":"Registration",
     "toRegister":"Register Now",
     "hasAccount":"Existing Account? ",
-    "toLogin":"Login Now,"
+    "toLogin":"Login Now,",
+    "msg":"User is logged in and does not need to log in again"
   },
   "bookings":{
     "flightNumber":"Flight Number",

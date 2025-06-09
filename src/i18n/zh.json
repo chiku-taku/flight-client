@@ -108,7 +108,8 @@
     "registering":"注册中",
     "toRegister":"立即注册",
     "hasAccount":"已有账户? ",
-    "toLogin":"立即登录"
+    "toLogin":"立即登录",
+    "msg":"用户已登录，无需重复登录"
   },
   "bookings":{
     "flightNumber":"航班号",

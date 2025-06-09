@@ -2,36 +2,43 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { register } from '../api/flightApi';
 import { useTranslation } from 'react-i18next';
-import { 
-  Container, 
-  Paper, 
-  Typography, 
-  TextField, 
-  Button, 
-  Grid, 
-  InputAdornment, 
+import LoginModal from '../components/LoginModal';
+
+import {
+  Container,
+  Paper,
+  Typography,
+  TextField,
+  Button,
+  Grid,
+  InputAdornment,
   IconButton,
   FormControl,
   //FormHelperText,
   MenuItem,
   Alert,
-  Collapse
+  Collapse,
+  type SnackbarCloseReason,
+  Snackbar
 } from '@mui/material';
-import { 
-  Visibility, 
-  VisibilityOff, 
-  Person, 
-  Email, 
-  Lock, 
+import {
+  Visibility,
+  VisibilityOff,
+  Person,
+  Email,
+  Lock,
   Badge,
   Phone,
   Public,
   Fingerprint
 } from '@mui/icons-material';
+import CloseIcon from '@mui/icons-material/Close';
+import { useAuth } from '@/contexts/AuthContext';
 
 const RegisterPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const [formData, setFormData] = useState({
     userId: '',
     email: '',
@@ -42,7 +49,7 @@ const RegisterPage = () => {
     phone: '',
     idNo: ''
   });
-  
+
   const [errors, setErrors] = useState({
     userId: '',
     email: '',
@@ -53,12 +60,13 @@ const RegisterPage = () => {
     phone: '',
     idNo: ''
   });
-  
+
   const [showPassword, setShowPassword] = useState(false);
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-
+  const [loginOpen, setLoginOpen] = useState(false);
+  const [open, setOpen] = React.useState(false);
   const countries = [
     { value: 'CN', label: t('register.china') },
     { value: 'US', label: t('register.america') },
@@ -76,7 +84,7 @@ const RegisterPage = () => {
 
   const validateField = (name: string, value: string) => {
     let error = '';
-    
+
     if (!value.trim()) {
       error = t('register.errorMsg1');
     } else {
@@ -105,14 +113,14 @@ const RegisterPage = () => {
           break;
       }
     }
-    
+
     return error;
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    
+
     // 实时验证
     const error = validateField(name, value);
     setErrors({ ...errors, [name]: error });
@@ -129,9 +137,9 @@ const RegisterPage = () => {
       phone: validateField('phone', formData.phone),
       idNo: validateField('idNo', formData.idNo)
     };
-    
+
     setErrors(newErrors);
-    
+
     return !Object.values(newErrors).some(error => error !== '');
   };
 
@@ -139,33 +147,70 @@ const RegisterPage = () => {
     e.preventDefault();
     setError('');
     setSuccess('');
-    
+
     if (!validateForm()) {
       setError(t('register.errorMsg6'));
       return;
     }
-    
+
     setLoading(true);
 
 
     try {
-      console.log('前端参数'+formData);
+      console.log('前端参数' + formData);
       const response = await register(formData);
       setSuccess(t('register.errorMsg7'));
       console.log(response);
       setLoading(false);
-     setTimeout(() => {
-         navigate('/login');
-       }, 2000);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error:any) {
-        setLoading(false);
-        setError(error.response?.data?.message || t('register.errorMsg8'));
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      setLoading(false);
+      setError(error.response?.data?.message || t('register.errorMsg8'));
       console.error('API请求错误:', error);
     } finally {
       setLoading(false);
     }
   };
+  //处理预订
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const onLogin = () => {
+    console.log('登陆验证' + isAuthenticated);
+    if (!isAuthenticated) {
+      setLoginOpen(true); // 打开登录模态框
+    } else {
+      setOpen(true);
+      // 已登录，提示
+    }
+  };
+
+  const handleClose = (
+    event: React.SyntheticEvent | Event,
+    reason?: SnackbarCloseReason,
+  ) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+  const action = (
+    <React.Fragment>
+      <Button color="secondary" size="small" onClick={handleClose}>
+
+      </Button>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
 
 
   return (
@@ -181,19 +226,19 @@ const RegisterPage = () => {
             </Typography>
           </Grid>
         </Grid>
-        
+
         <Collapse in={!!error}>
           <Alert severity="error" sx={{ mb: 3 }}>
             {error}
           </Alert>
         </Collapse>
-        
+
         <Collapse in={!!success}>
           <Alert severity="success" sx={{ mb: 3 }}>
             {success}
           </Alert>
         </Collapse>
-        
+
         <form onSubmit={handleSubmit}>
           <Grid container spacing={3}>
             {/* 第一行：用户ID和邮箱 */}
@@ -219,7 +264,7 @@ const RegisterPage = () => {
                 />
               </FormControl>
             </Grid>
-            
+
             <Grid>
               <FormControl fullWidth error={!!errors.email}>
                 <TextField
@@ -243,7 +288,7 @@ const RegisterPage = () => {
                 />
               </FormControl>
             </Grid>
-            
+
             {/* 第二行：名字和姓氏 */}
             <Grid>
               <FormControl fullWidth error={!!errors.firstName}>
@@ -267,7 +312,7 @@ const RegisterPage = () => {
                 />
               </FormControl>
             </Grid>
-            
+
             <Grid>
               <FormControl fullWidth error={!!errors.lastName}>
                 <TextField
@@ -290,7 +335,7 @@ const RegisterPage = () => {
                 />
               </FormControl>
             </Grid>
-            
+
             {/* 第三行：国家和电话 */}
             <Grid>
               <FormControl fullWidth error={!!errors.country} required>
@@ -319,7 +364,7 @@ const RegisterPage = () => {
                 </TextField>
               </FormControl>
             </Grid>
-            
+
             <Grid>
               <FormControl fullWidth error={!!errors.phone}>
                 <TextField
@@ -342,7 +387,7 @@ const RegisterPage = () => {
                 />
               </FormControl>
             </Grid>
-            
+
             {/* 第四行：密码和身份证号 */}
             <Grid>
               <FormControl fullWidth error={!!errors.password}>
@@ -377,7 +422,7 @@ const RegisterPage = () => {
                 />
               </FormControl>
             </Grid>
-            
+
             <Grid>
               <FormControl fullWidth error={!!errors.idNo}>
                 <TextField
@@ -401,7 +446,7 @@ const RegisterPage = () => {
               </FormControl>
             </Grid>
           </Grid>
-          
+
           <Button
             type="submit"
             fullWidth
@@ -425,20 +470,37 @@ const RegisterPage = () => {
           >
             {loading ? t('register.registering') : t('register.toRegister')}
           </Button>
-          
+
           <Typography variant="body2" color="textSecondary" align="center" mt={2}>
             {t('register.hasAccount')}
-            <Button 
-              color="primary" 
-              size="small" 
+            <Button
+              color="primary"
+              size="small"
               sx={{ ml: 1, textTransform: 'none' }}
-              onClick={() => navigate('/login')}
+              onClick={onLogin}
             >
               {t('register.toLogin')}
             </Button>
           </Typography>
         </form>
       </Paper>
+      {/* 登录模态框 */}
+      <LoginModal
+        open={loginOpen}
+        onClose={() => setLoginOpen(false)}
+        //onLoginSuccess={handleLoginSuccess} 
+        nextPage={''}
+        onLoginSuccess={() => {
+          console.log('登录成功');
+          // 执行登录后的操作
+        }} />
+      <Snackbar
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        message={t('register.msg')}
+        action={action}
+      />
     </Container>
   );
 };
